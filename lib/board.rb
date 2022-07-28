@@ -1,8 +1,8 @@
 require_relative 'colorize'
 require_relative 'piece_reference'
 
-class Board	
-	attr_accessor :grid
+class Board
+		attr_accessor :grid, :pawn, :knight, :bishop, :rook, :queen, :king								
 	
 	def initialize
 		@empty = Empty.new
@@ -12,10 +12,10 @@ class Board
 		@bishop = Bishop.new
 		@knight = Knight.new
 		@pawn = Pawn.new				
-		@grid = Array.new(8){Array.new(8, "#{@empty}" )}
+		@grid = Array.new(8){Array.new(8, "#{@empty}" )}				
 	end
 
-	def empty_board
+	def print_board
 		puts "\n"						
 		@grid.map.with_index do |row, i|
 			row.each_index do |n|
@@ -76,5 +76,7 @@ class Board
 	def pawns
 		@grid[1] = Array.new(8, "#{@pawn.black}")
 		@grid[6] = Array.new(8, "#{@pawn.white}")		
-	end
+	end	
 end
+
+	

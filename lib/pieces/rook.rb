@@ -1,9 +1,9 @@
 class Rook
-	def black
-		" \u2656 "	
+	def initialize(color)
+		@color = color
 	end
 
-	def white
-		" \u265C "
-	end
+	def to_s
+		@color == :black ? " \u2656 " : " \u265C "
+	end	
 end

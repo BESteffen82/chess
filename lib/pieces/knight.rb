@@ -1,9 +1,9 @@
 class Knight
-	def black
-		" \u2658 "	
+	def initialize(color)
+		@color = color
 	end
 
-	def white
-		" \u265E "
-	end
+	def to_s
+		@color == :black ? " \u2658 " : " \u265E "
+	end	
 end

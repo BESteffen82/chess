@@ -1,9 +1,9 @@
 class Queen
-	def black
-		" \u2655 "	
+	def initialize(color)
+		@color = color
 	end
 
-	def white
-		" \u265B "
-	end
+	def to_s
+		@color == :black ? " \u2655 " : " \u265B "
+	end	
 end

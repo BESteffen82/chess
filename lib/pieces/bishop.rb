@@ -1,9 +1,9 @@
 class Bishop
-	def black
-		" \u2657 "	
+	def initialize(color)
+		@color = color
 	end
 
-	def white
-		" \u265D "
-	end
+	def to_s
+		@color == :black ? " \u2657 " : " \u265D "
+	end	
 end

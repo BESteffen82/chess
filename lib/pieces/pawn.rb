@@ -1,9 +1,9 @@
 class Pawn
-	def black
-		" \u2659 "	
+	def initialize(color)
+		@color = color
 	end
 
-	def white
-		" \u265F "
-	end
+	def to_s
+		@color == :black ? " \u2659 " : " \u265F "
+	end		
 end

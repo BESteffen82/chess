@@ -2,14 +2,10 @@ require_relative 'board'
 require_relative 'player'
 
 class Game
-	attr_accessor :board
-
-	VALID_CHARS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-		'1', '2', '3', '4', '5', '6', '7', '8']	
-
-	def initialize
-		@board = Board.new
-		@file = %w[a b c d e f g h]
+	attr_accessor :piece_input
+	
+	def initialize		
+		@board = Board.new		
 		@player_one = Player.new(:white)
 		@player_two = Player.new(:black)
 		@current_player = @player_one
@@ -17,8 +13,11 @@ class Game
 
 	def play_game				
 		game_setup
-		print_piece_input
-		binding.pry										
+		loop do
+			print_piece_input		
+			@board.move_piece		
+			switch_players
+		end												
 	end
 
 	def game_setup
@@ -33,24 +32,21 @@ class Game
 
 	def print_select_game_type
 		puts "Would you like to:\n\n[1] Start a new game\n[2] Load a saved game\n"
-		@game_input = gets.chomp
-		print_piece_input 
+		@game_input = gets.chomp		 
 	end
 
 	def print_piece_input
 		if @game_input == "1"		
 			@board.print_board
-			puts "\n#{@current_player} move!\nEnter the coordinate of the piece you would like to move "\
-			"(e.g., a1) or enter 'draw', 'save', or 'quit':\n"
-			loop do
-				@piece_input = gets.chomp.downcase							
-				if valid_coordinate?(@piece_input)
-					convert_piece_coordinate(@piece_input)											
-					return print_move_input 			
-				else
-					puts "\nInvalid choice. Choose another coordinate.".red
-				end
-			end
+			puts "\n#{@current_player} move!\nEnter the coordinate of the piece you would "\
+			"like to move (e.g., a1) or enter 'draw', 'save', or 'quit':\n"
+			@piece_input = gets.chomp.downcase							
+			if @board.valid_input?(@piece_input)
+				@board.convert_piece_coordinate(@piece_input)											
+				return print_move_input 			
+			else
+				puts "\nInvalid choice. Choose another coordinate.".red
+			end			
 		end				
 	end
 		
@@ -58,9 +54,8 @@ class Game
 		puts "\nEnter the coordinate of the square you would like to move the "\
 		"selected piece to move to (e.g., a1) or enter 'draw', 'save', or 'quit':\n"
 		@move_input = gets.chomp.downcase		
-		if valid_coordinate?(@move_input)
-			convert_move_coordinate(@move_input)						
-			switch_players			
+		if @board.valid_move?(@move_input)
+			@board.convert_move_coordinate(@move_input)								
 		else			
 			puts "\nInvalid choice. Choose another coordinate.".red
 		end			
@@ -68,22 +63,5 @@ class Game
 
 	def switch_players
 		@current_player = @current_player == @player_one? @player_two: @player_one
-	end
-
-	def convert_piece_coordinate(input)		
-		input.split(//)		
-		@piece_coor = [@file.index(input[0]), (input[1].to_i)- 1]			
-	end
-	
-	def convert_move_coordinate(input)		
-		input.split(//)		
-		@move_coor = [@file.index(input[0]), (input[1].to_i)- 1]				
-	end
-
-	def valid_coordinate?(input)					
-		input.split(//)		
-		VALID_CHARS.include?(input[0]) && VALID_CHARS.include?(input[1])				
-	end
-	
-	
+	end	
 end

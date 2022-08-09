@@ -50,6 +50,15 @@ module Pieces
 	def b_pawn
 		" \u2659 "
 	end
+
+	def white_pieces
+    [" \u265A ", " \u265B ", " \u265C ", " \u265D ", " \u265E ", " \u265F "]
+  end
+
+	def black_pieces
+		[" \u2654 ", " \u2655 ", " \u2656 ", " \u2657 ", " \u2658 ", " \u2659 "]
+	end
+  
 end
 
 

@@ -1,18 +1,28 @@
 require_relative 'colorize'
-require_relative 'piece_reference'
+require_relative 'pieces'
 
-class Board
-		attr_accessor :grid, :pawn, :knight, :bishop, :rook, :queen, :king								
+class Board 
+		include Pieces		
+		
+		VALID_CHARS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+			'1', '2', '3', '4', '5', '6', '7', '8']	
 	
 	def initialize				
-		@grid = Array.new(8){Array.new(8, "#{Empty.new}" )}				
+		@grid = Array.new(8){Array.new(8, "#{empty}" )}
+		@grid[0] = ["#{b_rook}","#{b_knight}","#{b_bishop}","#{b_queen}","#{b_king}",
+			"#{b_bishop}","#{b_knight}","#{b_rook}"]    
+    @grid[1] = Array.new(8, "#{b_pawn}")
+    @grid[6] = Array.new(8, "#{w_pawn}")
+		@grid[7] = ["#{w_rook}","#{w_knight}","#{w_bishop}","#{w_queen}","#{w_king}",
+			"#{w_bishop}","#{w_knight}","#{w_rook}"]
+		@file = %w[a b c d e f g h]
+		@rank = 8.downto(1).to_a												
 	end
 
 	def print_board
 		puts "\n"						
 		@grid.map.with_index do |row, i|
-			row.each_index do |n|
-				place_initial_pieces				
+			row.each_index do |n|																					
 				if i.odd? && n.odd? || i.even? && n.even?
 				@grid[i][n] = @grid[i][n].blue_back																		  										
 				else
@@ -28,47 +38,99 @@ class Board
 				end																																									
 			end										
 		end
-		print "   a  b  c  d  e  f  g  h\n".yellow									
+		print "   a  b  c  d  e  f  g  h\n".yellow											
 	end
 	
-	def place_initial_pieces
-		kings && queens && rooks && bishops && knights && pawns
+	def convert_piece_coordinate(input)		
+		input.split(//)		
+		@piece_coor = [@rank.index(input[1].to_i), @file.index(input[0])]					
 	end
 	
-	def kings	
-		@grid[0][4]	= "#{King.new(:black)}"
-		@grid[7][4] = "#{King.new(:white)}"
+	def convert_move_coordinate(input)		
+		input.split(//)		
+		@move_coor = [@rank.index(input[1].to_i), @file.index(input[0])]					
+	end	
+
+
+	def valid_input?(input)					
+		input.split(//)		
+		VALID_CHARS.include?(input[0]) && VALID_CHARS.include?(input[1])
 	end
 
-	def queens
-		@grid[0][3]	= "#{Queen.new(:black)}"
-		@grid[7][3] = "#{Queen.new(:white)}"
+	def valid_move?(input)					
+		input.split(//)		
+		VALID_CHARS.include?(input[0]) && VALID_CHARS.include?(input[1])
 	end
 
-	def rooks
-		@grid[0][0]	= "#{Rook.new(:black)}"
-		@grid[7][0] = "#{Rook.new(:white)}"
-		@grid[0][7]	= "#{Rook.new(:black)}"
-		@grid[7][7] = "#{Rook.new(:white)}"
+	def move_piece
+		piece = @grid[@piece_coor[0]][@piece_coor[1]]				
+		if piece.include?("#{w_pawn}") || piece.include?("#{b_pawn}")
+		  pawn_moves				
+		elsif piece.include?("#{w_knight}") || piece.include?("#{b_knight}")
+		  knight_moves
+		elsif piece.include?("#{w_rook}") || piece.include?("#{b_rook}")
+		  rook_moves			
+		elsif piece.include?("#{w_bishop}") || piece.include?("#{b_bishop}")
+		  bishop_moves
+		elsif piece.include?("#{w_queen}") || piece.include?("#{b_queen}")
+		  queen_moves
+		elsif piece.include?("#{w_king}") || piece.include?("#{b_king}")
+		  king_moves
+		end				
 	end
 
-	def bishops
-		@grid[0][2]	= "#{Bishop.new(:black)}"
-		@grid[7][2] = "#{Bishop.new(:white)}"
-		@grid[0][5]	= "#{Bishop.new(:black)}"
-		@grid[7][5] = "#{Bishop.new(:white)}"
+	def pawn_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_pawn}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_pawn}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_pawn}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"		
 	end
 
-	def knights
-		@grid[0][1]	= "#{Knight.new(:black)}"
-		@grid[7][1] = "#{Knight.new(:white)}"
-		@grid[0][6]	= "#{Knight.new(:black)}"
-		@grid[7][6] = "#{Knight.new(:white)}"
+	def knight_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_knight}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"
+	end
+	
+	def rook_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_rook}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_rook}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_rook}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"
 	end
 
-	def pawns
-		@grid[1] = Array.new(8, "#{Pawn.new(:black)}")
-		@grid[6] = Array.new(8, "#{Pawn.new(:white)}")		
+	def bishop_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_bishop}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_bishop}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_bishop}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"
+	end
+
+	def queen_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_queen}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_queen}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_queen}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"
+	end
+
+	def king_moves
+		if @grid[@piece_coor[0]][@piece_coor[1]].include?("#{w_king}")
+			@grid[@move_coor[0]][@move_coor[1]] = "#{w_king}"			
+		else 
+			@grid[@move_coor[0]][@move_coor[1]] = "#{b_king}"			
+		end
+		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"
 	end	
 end
 

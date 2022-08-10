@@ -1,9 +1,7 @@
 require_relative 'board'
 require_relative 'player'
 
-class Game
-	attr_accessor :piece_input
-	
+class Game	
 	def initialize		
 		@board = Board.new		
 		@player_one = Player.new(:white)

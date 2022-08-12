@@ -52,11 +52,11 @@ module Pieces
 	end
 
 	def white_pieces
-    [" \u265A ", " \u265B ", " \u265C ", " \u265D ", " \u265E ", " \u265F "]
+    [w_rook, w_knight, w_bishop, w_queen, w_king, w_pawn]
   end
 
 	def black_pieces
-		[" \u2654 ", " \u2655 ", " \u2656 ", " \u2657 ", " \u2658 ", " \u2659 "]
+		[b_rook, b_knight, b_bishop, b_queen, b_king, b_pawn]
 	end
   
 end

@@ -64,7 +64,7 @@ class Board
 	end	
 
 	def move_piece(player)																	
-		if @current.include?("#{w_pawn}") 
+		if @current.include?("#{w_pawn}")			 
 			w_pawn_moves
 		elsif @current.include?("#{b_pawn}")
 			b_pawn_moves						
@@ -92,20 +92,74 @@ class Board
 		@grid[@piece_coor[0]][@piece_coor[1]] = "#{empty}"					
 	end
 
-	def w_pawn_moves			 
-		@grid[@move_coor[0]][@move_coor[1]] = "#{w_pawn}"			
+	def w_pawn_moves				 			 
+		@grid[@move_coor[0]][@move_coor[1]] = "#{w_pawn}"					
 	end
 
 	def b_pawn_moves		
 		@grid[@move_coor[0]][@move_coor[1]] =	"#{b_pawn}"									
 	end
 
-	def w_knight_moves			 
-		@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"			
+	def w_knight_moves		
+		if (@piece_coor[0]	- 2) == @move_coor[0]
+			if (@piece_coor[1] + 1) == @move_coor[1]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"
+			elsif (@piece_coor[1] - 1) == @move_coor[1]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"	
+			end
+		end
+		if (@piece_coor[0]	+ 2) == @move_coor[0]
+			if (@piece_coor[1] + 1) == @move_coor[1]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"
+			elsif (@piece_coor[1] - 1) == @move_coor[1]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"	
+			end
+		end
+		if (@piece_coor[1]	- 2) == @move_coor[1]
+			if (@piece_coor[0] + 1) == @move_coor[0]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"
+			elsif (@piece_coor[0] - 1) == @move_coor[0]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"	
+			end
+		end
+		if (@piece_coor[1]	+ 2) == @move_coor[1]
+			if (@piece_coor[0] + 1) == @move_coor[0]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"
+			elsif (@piece_coor[0] - 1) == @move_coor[0]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{w_knight}"	
+			end
+		end 				 				 				 				
 	end
 
 	def b_knight_moves		
-		@grid[@move_coor[0]][@move_coor[1]] =	"#{b_knight}"									
+		if (@piece_coor[0]	- 2) == @move_coor[0]
+			if (@piece_coor[1] + 1) == @move_coor[1]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"
+			elsif (@piece_coor[1] - 1) == @move_coor[1]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"	
+			end
+		end
+		if (@piece_coor[0]	+ 2) == @move_coor[0]
+			if (@piece_coor[1] + 1) == @move_coor[1]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"
+			elsif (@piece_coor[1] - 1) == @move_coor[1]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"	
+			end
+		end
+		if (@piece_coor[1]	- 2) == @move_coor[1]
+			if (@piece_coor[0] + 1) == @move_coor[0]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"
+			elsif (@piece_coor[0] - 1) == @move_coor[0]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"	
+			end
+		end
+		if (@piece_coor[1]	+ 2) == @move_coor[1]
+			if (@piece_coor[0] + 1) == @move_coor[0]  			 
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"
+			elsif (@piece_coor[0] - 1) == @move_coor[0]
+				@grid[@move_coor[0]][@move_coor[1]] = "#{b_knight}"	
+			end
+		end 				 				 				 				 				 													
 	end
 
 	def w_rook_moves			 

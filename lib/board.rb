@@ -58,7 +58,7 @@ class Board
   end
 
   def check_piece_color(player)
-    @current = @grid[@piece_coor[0]][@piece_coor[1]]		
+    @current = @grid[@piece_coor[0]][@piece_coor[1]]    		
     case player.color
     when :white
       return true if white_pieces.any? { |piece| @current.include?(piece) }
@@ -106,16 +106,16 @@ class Board
     @grid[@piece_coor[0]][@piece_coor[1]] = empty.to_s
   end
 
-	def piece_moves
-		w_knight_moves && b_knight_moves 
-	end
-
   def w_pawn_moves
-    @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
+    if (@piece_coor[0]- 1) == @move_coor[0] 
+      @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s               
+    end
   end
 
   def b_pawn_moves
-    @grid[@move_coor[0]][@move_coor[1]] =	b_pawn.to_s
+    if (@piece_coor[0]	+ 1) == @move_coor[0] 
+      @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
+    end
   end
 
   def w_knight_moves		
@@ -143,34 +143,44 @@ class Board
   end
 
   def w_rook_moves
-    @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+    if 1.upto(7){|i| (@piece_coor[0] - i) == @move_coor[0] || (@piece_coor[0] + i) == @move_coor[0]}
+      @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+    end
+    if 1.upto(7){|i| (@piece_coor[1] - i) == @move_coor[1] || (@piece_coor[1] + i) == @move_coor[1]}
+      @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+    end       
   end
 
   def b_rook_moves
-    @grid[@move_coor[0]][@move_coor[1]] =	b_rook.to_s
+    if 1.upto(7){|i| (@piece_coor[0] - i) == @move_coor[0] || (@piece_coor[0] + i) == @move_coor[0]}
+      @grid[@move_coor[0]][@move_coor[1]] = b_rook.to_s
+    end
+    if 1.upto(7){|i| (@piece_coor[1] - i) == @move_coor[1] || (@piece_coor[1] + i) == @move_coor[1]}
+      @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+    end  
   end
 
   def w_bishop_moves
-    @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
   end
 
   def b_bishop_moves
-    @grid[@move_coor[0]][@move_coor[1]] =	b_bishop.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] =	b_bishop.to_s
   end
 
   def w_queen_moves
-    @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
   end
 
   def b_queen_moves
-    @grid[@move_coor[0]][@move_coor[1]] =	b_queen.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] =	b_queen.to_s
   end
 
   def w_king_moves
-    @grid[@move_coor[0]][@move_coor[1]] = w_king.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] = w_king.to_s
   end
 
   def b_king_moves
-    @grid[@move_coor[0]][@move_coor[1]] =	b_king.to_s
+    #@grid[@move_coor[0]][@move_coor[1]] =	b_king.to_s
   end
 end

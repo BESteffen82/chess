@@ -52,14 +52,18 @@ class Game
 		@move_input = gets.chomp.downcase					
 		if @board.valid_move?(@move_input) && @board.correct_move_square?(@current_player) 
 			@board.move_piece(@current_player)
-			switch_players
-		else																			
-			puts "\nInvalid move. Choose another coordinate.".red
-			print_move_input			
-		end					
+			@board.valid_piece_move? ? switch_players : invalid_move
+		else
+			invalid_move											
+		end							
 	end
 
 	def switch_players
 		@current_player = @current_player == @player_one? @player_two: @player_one
-	end	
+	end
+	
+	def invalid_move
+		puts "\nInvalid move. Choose another coordinate.".red
+		print_move_input
+	end
 end

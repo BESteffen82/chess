@@ -102,9 +102,9 @@ class Board
       w_king_moves
     elsif @current.include?(b_king.to_s)
       b_king_moves    
-    end
-    if valid_piece_move?       
-      @grid[@piece_coor[0]][@piece_coor[1]] = empty.to_s
+    end     
+    if valid_piece_move?           
+      @grid[@piece_coor[0]][@piece_coor[1]] = empty.to_s            
     end
   end
 
@@ -157,7 +157,7 @@ class Board
   end
 
   def b_knight_moves
-    if @current.include?(w_knight.to_s)
+    if @current.include?(b_knight.to_s)
       if (@piece_coor[0]	- 2) == @move_coor[0] || (@piece_coor[0]	+ 2) == @move_coor[0]
         if (@piece_coor[1] + 1) == @move_coor[1] || (@piece_coor[1] - 1) == @move_coor[1]
           @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s
@@ -169,7 +169,7 @@ class Board
           return true     
         end
       end
-      
+
       false
     end
   end

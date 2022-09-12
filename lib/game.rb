@@ -28,7 +28,11 @@ class Game
 
 	def print_select_game_type
 		puts "Would you like to:\n\n[1] Start a new game\n[2] Load a saved game\n"
-		@game_input = gets.chomp		 
+		loop do
+			@game_input = gets.chomp
+			return @game_input if @game_input == "1" || @game_input == "2"
+			puts "\nInvalid choice. Choose 1 or 2.".red			
+		end	 
 	end
 
 	def print_piece_input
@@ -50,7 +54,7 @@ class Game
 		puts "\nEnter the coordinate of the square you would like to move the "\
 		"selected piece to move to (e.g., a1) or enter 'draw', 'save', or 'quit':\n"
 		@move_input = gets.chomp.downcase					
-		if @board.valid_move?(@move_input) && @board.correct_move_square?(@current_player) 
+		if @board.valid_move?(@move_input) && @board.correct_move_square?(@current_player)			
 			@board.move_piece(@current_player)
 			@board.valid_piece_move? ? switch_players : invalid_move
 		else

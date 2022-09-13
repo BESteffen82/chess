@@ -120,10 +120,17 @@ class Board
   end
 
   def w_pawn_moves
-    if @current.include?(w_pawn.to_s)    
-      if @piece_coor[0] - 1 == @move_coor[0] && @piece_coor[1] == @move_coor[1]
-        @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-        return true                       
+    if @current.include?(w_pawn.to_s)
+      if @piece_coor[1] == @move_coor[1]
+        if @piece_coor[0] == 6
+          if @piece_coor[0] - 2 == @move_coor[0] || @piece_coor[0] - 1 == @move_coor[0]
+            @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
+            return true
+          end   
+        elsif @piece_coor[0] - 1 == @move_coor[0]  
+          @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
+          return true                       
+        end
       end
     end
     false              
@@ -131,9 +138,16 @@ class Board
 
   def b_pawn_moves
     if @current.include?(b_pawn.to_s)
-      if @piece_coor[0]	+ 1 == @move_coor[0] && @piece_coor[1] == @move_coor[1]
-        @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-        return true        
+      if @piece_coor[1] == @move_coor[1]
+        if @piece_coor[0] == 1
+          if @piece_coor[0] + 2 == @move_coor[0] || @piece_coor[0] + 1 == @move_coor[0]
+            @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
+            return true
+          end   
+        elsif @piece_coor[0] + 1 == @move_coor[0]  
+          @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
+          return true                       
+        end
       end
     end
     false   

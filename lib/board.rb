@@ -112,7 +112,8 @@ class Board
     return true if w_pawn_moves || b_pawn_moves
     return true if w_knight_moves || b_knight_moves
     return true if w_rook_moves || b_rook_moves
-    return true if w_bishop_moves || b_bishop_moves    
+    return true if w_bishop_moves || b_bishop_moves
+    return true if w_queen_moves || b_queen_moves    
 
     false
   end
@@ -246,18 +247,63 @@ class Board
   end
 
   def w_queen_moves
-    #@grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+    if @current.include?(w_queen.to_s)
+      for i in 1..7
+        if @piece_coor[0] - i == @move_coor[0]
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+            return true
+          end
+        elsif @piece_coor[0] + i == @move_coor[0]
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+            return true
+          end
+        elsif @piece_coor[1] - i == @move_coor[1] && @piece_coor[0] == @move_coor[0]
+          @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+            return true
+        elsif @piece_coor[1] - i == @move_coor[1] && @piece_coor[0] == @move_coor[0]
+          @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+            return true
+        end            
+      end
+    end
+    false
   end
 
   def b_queen_moves
-    #@grid[@move_coor[0]][@move_coor[1]] =	b_queen.to_s
+    if @current.include?(b_queen.to_s)
+      for i in 1..7
+        if @piece_coor[0] - i == @move_coor[0]
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
+            return true
+          end
+        elsif @piece_coor[0] + i == @move_coor[0]
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
+            return true
+          end
+        elsif @piece_coor[1] - i == @move_coor[1] && @piece_coor[0] == @move_coor[0]
+          @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
+            return true
+        elsif @piece_coor[1] - i == @move_coor[1] && @piece_coor[0] == @move_coor[0]
+          @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
+            return true
+        end            
+      end
+    end
+    false
   end
 
   def w_king_moves
-    #@grid[@move_coor[0]][@move_coor[1]] = w_king.to_s
+    if @current.include?(w_king.to_s)
+    end
   end
+    
 
   def b_king_moves
-    #@grid[@move_coor[0]][@move_coor[1]] =	b_king.to_s
+    if @current.include?(b_king.to_s)
+    end    
   end
 end

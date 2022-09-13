@@ -207,18 +207,16 @@ class Board
   def w_bishop_moves            
     if @current.include?(w_bishop.to_s)            
       for i in 1..7
-        if @piece_coor[0] - i == @move_coor[0] && @piece_coor[1] - i == @move_coor[1]
+        if @piece_coor[0] - i == @move_coor[0] 
+          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
           @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
           return true
-        elsif @piece_coor[0] + i == @move_coor[0] && @piece_coor[1] + i == @move_coor[1]
+          end
+        elsif @piece_coor[0] + i == @move_coor[0] 
+          if @piece_coor[1] + i == @move_coor[1] || @piece_coor[1] - i == @move_coor[1]
           @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
           return true
-        elsif @piece_coor[0] - i == @move_coor[0] && @piece_coor[1] + i == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
-          return true
-        elsif @piece_coor[0] + i == @move_coor[0] && @piece_coor[1] - i == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
-          return true                                                     
+          end                                                      
         end        
       end      
     end
@@ -228,18 +226,16 @@ class Board
   def b_bishop_moves
     if @current.include?(b_bishop.to_s)            
       for i in 1..7
-        if @piece_coor[0] - i == @move_coor[0] && @piece_coor[1] - i == @move_coor[1]
+        if @piece_coor[0] - i == @move_coor[0] 
+          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
           @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
           return true
-        elsif @piece_coor[0] + i == @move_coor[0] && @piece_coor[1] + i == @move_coor[1]
+          end
+        elsif @piece_coor[0] + i == @move_coor[0] 
+          if @piece_coor[1] + i == @move_coor[1] || @piece_coor[1] - i == @move_coor[1]
           @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
           return true
-        elsif @piece_coor[0] - i == @move_coor[0] && @piece_coor[1] + i == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
-          return true
-        elsif @piece_coor[0] + i == @move_coor[0] && @piece_coor[1] - i == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
-          return true                                                     
+          end                            
         end        
       end      
     end

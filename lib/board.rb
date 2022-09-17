@@ -18,7 +18,7 @@ class Board
     @grid[7] = [w_rook.to_s, w_knight.to_s, w_bishop.to_s, w_queen.to_s, w_king.to_s,
                 w_bishop.to_s, w_knight.to_s, w_rook.to_s]
     @file = %w[a b c d e f g h]
-    @rank = 8.downto(1).to_a               
+    @rank = 8.downto(1).to_a                   
   end
 
   def print_board
@@ -149,8 +149,7 @@ class Board
           return true                       
         end
       end
-    end
-    false   
+    end       
   end
 
   def w_knight_moves
@@ -166,8 +165,7 @@ class Board
           return true                
         end
       end      		    
-    end
-    false
+    end    
   end
 
   def b_knight_moves
@@ -183,24 +181,25 @@ class Board
           return true               
         end
       end      
-    end
-    false
+    end    
   end
 
   def w_rook_moves    
-    if @current.include?(w_rook.to_s)
+    if @current.include?(w_rook.to_s)      
       for i in 1..7
-        if @piece_coor[1] == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]   
-            @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
-            return true
-          end          
-        elsif @piece_coor[0] == @move_coor[0] 
-          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
-            @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
-            return true        
+        if valid_rook_move?                  
+          if @piece_coor[1] == @move_coor[1] 
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]   
+              @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+              return true
+            end          
+          elsif @piece_coor[0] == @move_coor[0] 
+            if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+              @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s
+              return true        
+            end
           end
-        end
+        end              
       end
     end
     false        
@@ -209,20 +208,39 @@ class Board
   def b_rook_moves
     if @current.include?(b_rook.to_s)
       for i in 1..7
-        if @piece_coor[1] == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]   
-           @grid[@move_coor[0]][@move_coor[1]] = b_rook.to_s
-           return true
-          end          
-        elsif @piece_coor[0] == @move_coor[0] 
-          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+        if valid_rook_move?
+          if @piece_coor[1] == @move_coor[1]
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]   
             @grid[@move_coor[0]][@move_coor[1]] = b_rook.to_s
-            return true        
+            return true
+            end          
+          elsif @piece_coor[0] == @move_coor[0] 
+            if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+              @grid[@move_coor[0]][@move_coor[1]] = b_rook.to_s
+              return true        
+            end
           end
         end        
       end
     end
     false    
+  end
+
+  def valid_rook_move?
+    rook_path = []
+    if @piece_coor[0] > @move_coor[0]          
+      (@piece_coor[0] - 1).downto(@move_coor[0] + 1) { |i| rook_path << @grid[i][@piece_coor[1]] }           
+        return true if rook_path.all? { |i| i.include?(empty) }                
+    elsif @piece_coor[0] < @move_coor[0] && @piece_coor[1] == @move_coor[1]
+      (@piece_coor[0] + 1).upto(@move_coor[0] - 1) { |i| rook_path << @grid[i][@piece_coor[1]] }
+        return true if rook_path.all? { |i| i.include?(empty) }        
+    elsif @piece_coor[1] > @move_coor[1] && @piece_coor[0] == @move_coor[0]         
+      (@piece_coor[1] - 1).downto(@move_coor[1] + 1) { |i| rook_path << @grid[@piece_coor[0]][i] }
+        return true if rook_path.all? { |i| i.include?(empty) }
+    elsif @piece_coor[1] < @move_coor[1] && @piece_coor[0] == @move_coor[0]
+      (@piece_coor[1] + 1).upto(@move_coor[1] - 1) { |i| rook_path << @grid[@piece_coor[0]][i] }
+        return true if rook_path.all? { |i| i.include?(empty) }    
+    end                                      
   end
 
   def w_bishop_moves            

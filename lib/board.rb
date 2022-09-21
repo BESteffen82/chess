@@ -229,28 +229,27 @@ class Board
   def valid_rook_move?
     rook_path = []
     if @piece_coor[0] > @move_coor[0]          
-      (@piece_coor[0] - 1).downto(@move_coor[0] + 1) { |i| rook_path << @grid[i][@piece_coor[1]] }           
-        return true if rook_path.all? { |i| i.include?(empty) }                
+      (@piece_coor[0] - 1).downto(@move_coor[0] + 1) { |i| rook_path << @grid[i][@piece_coor[1]] }                       
     elsif @piece_coor[0] < @move_coor[0] && @piece_coor[1] == @move_coor[1]
-      (@piece_coor[0] + 1).upto(@move_coor[0] - 1) { |i| rook_path << @grid[i][@piece_coor[1]] }
-        return true if rook_path.all? { |i| i.include?(empty) }        
+      (@piece_coor[0] + 1).upto(@move_coor[0] - 1) { |i| rook_path << @grid[i][@piece_coor[1]] }                
     elsif @piece_coor[1] > @move_coor[1] && @piece_coor[0] == @move_coor[0]         
-      (@piece_coor[1] - 1).downto(@move_coor[1] + 1) { |i| rook_path << @grid[@piece_coor[0]][i] }
-        return true if rook_path.all? { |i| i.include?(empty) }
+      (@piece_coor[1] - 1).downto(@move_coor[1] + 1) { |i| rook_path << @grid[@piece_coor[0]][i] }        
     elsif @piece_coor[1] < @move_coor[1] && @piece_coor[0] == @move_coor[0]
-      (@piece_coor[1] + 1).upto(@move_coor[1] - 1) { |i| rook_path << @grid[@piece_coor[0]][i] }
-        return true if rook_path.all? { |i| i.include?(empty) }    
-    end                                      
+      (@piece_coor[1] + 1).upto(@move_coor[1] - 1) { |i| rook_path << @grid[@piece_coor[0]][i] }           
+    end
+    return true if rook_path.all? { |path| path.include?(empty) }                                       
   end
 
   def w_bishop_moves            
     if @current.include?(w_bishop.to_s)            
       for i in 1..7
-        if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]  
-            @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
-            return true
-          end                                                      
+        if valid_bishop_move?
+          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]  
+              @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s
+              return true
+            end                                                      
+          end
         end        
       end      
     end
@@ -260,15 +259,33 @@ class Board
   def b_bishop_moves
     if @current.include?(b_bishop.to_s)            
       for i in 1..7
-        if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]  
-            @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
-            return true
-          end                  
+        if valid_bishop_move?
+          if @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0]  
+              @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s
+              return true
+            end                  
+          end
         end        
       end      
     end
     false        
+  end
+
+  def valid_bishop_move?
+    bishop_path = []
+    1.upto(7) do |i|
+      if (@piece_coor[0] - i) > @move_coor[0] && (@piece_coor[1] - i) > @move_coor[1]
+        bishop_path << @grid[@piece_coor[0] - i][@piece_coor[1] - i]      
+      elsif (@piece_coor[0] + i) < @move_coor[0] && (@piece_coor[1] + i) < @move_coor[1]
+        bishop_path << @grid[@piece_coor[0] + i][@piece_coor[1] + i]       
+      elsif (@piece_coor[0] - i) > @move_coor[0] && (@piece_coor[1] + i) < @move_coor[1]        
+        bishop_path << @grid[@piece_coor[0] - i][@piece_coor[1] + i]        
+      elsif (@piece_coor[0] + i) < @move_coor[0] && (@piece_coor[1] - i) > @move_coor[1]
+        bishop_path << @grid[@piece_coor[0] + i][@piece_coor[1] - i]
+      end           
+    end    
+    return true if bishop_path.all? { |path| path.include?(empty) }        
   end
 
   def w_queen_moves

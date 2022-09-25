@@ -152,17 +152,22 @@ class Board
     end       
   end
 
+  def valid_pawn_move?
+  end
+
   def w_knight_moves
-    if @current.include?(w_knight.to_s)		
-      if @piece_coor[0]	- 2 == @move_coor[0] || @piece_coor[0]	+ 2 == @move_coor[0]
-        if @piece_coor[1] + 1 == @move_coor[1] || @piece_coor[1] - 1 == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = w_knight.to_s
-          return true                
-        end   
-      elsif @piece_coor[1]	- 2 == @move_coor[1] || @piece_coor[1]	+ 2 == @move_coor[1]
-        if @piece_coor[0] + 1 == @move_coor[0] ||	@piece_coor[0] - 1 == @move_coor[0]			
-          @grid[@move_coor[0]][@move_coor[1]] = w_knight.to_s
-          return true                
+    if @current.include?(w_knight.to_s)
+      if valid_knight_move?		
+        if @piece_coor[0]	- 2 == @move_coor[0] || @piece_coor[0]	+ 2 == @move_coor[0]
+          if @piece_coor[1] + 1 == @move_coor[1] || @piece_coor[1] - 1 == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = w_knight.to_s
+            return true                
+          end   
+        elsif @piece_coor[1]	- 2 == @move_coor[1] || @piece_coor[1]	+ 2 == @move_coor[1]
+          if @piece_coor[0] + 1 == @move_coor[0] ||	@piece_coor[0] - 1 == @move_coor[0]			
+            @grid[@move_coor[0]][@move_coor[1]] = w_knight.to_s
+            return true                
+          end
         end
       end      		    
     end    
@@ -170,18 +175,34 @@ class Board
 
   def b_knight_moves
     if @current.include?(b_knight.to_s)
-      if @piece_coor[0]	- 2 == @move_coor[0] || @piece_coor[0]	+ 2 == @move_coor[0]
-        if @piece_coor[1] + 1 == @move_coor[1] || @piece_coor[1] - 1 == @move_coor[1]
-          @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s
-          return true                
-        end           
-      elsif @piece_coor[1]	- 2 == @move_coor[1] || @piece_coor[1]	+ 2 == @move_coor[1]
-        if @piece_coor[0] + 1 == @move_coor[0] || @piece_coor[0] - 1 == @move_coor[0]
-          @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s
-          return true               
+      if valid_knight_move?
+        if @piece_coor[0]	- 2 == @move_coor[0] || @piece_coor[0]	+ 2 == @move_coor[0]
+          if @piece_coor[1] + 1 == @move_coor[1] || @piece_coor[1] - 1 == @move_coor[1]
+            @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s
+            return true                
+          end           
+        elsif @piece_coor[1]	- 2 == @move_coor[1] || @piece_coor[1]	+ 2 == @move_coor[1]
+          if @piece_coor[0] + 1 == @move_coor[0] || @piece_coor[0] - 1 == @move_coor[0]
+            @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s
+            return true               
+          end
         end
       end      
     end    
+  end
+
+  def valid_knight_move?
+    knight_path = []
+    if @piece_coor[0] + 2 == @move_coor[0]
+      knight_path += [@grid[@move_coor[0]][@piece_coor[1]], @grid[@piece_coor[0] + 1][@move_coor[1]]]       
+    elsif @piece_coor[0] - 2 == @move_coor[0]     
+      knight_path += [@grid[@move_coor[0]][@piece_coor[1]], @grid[@piece_coor[0] - 1][@move_coor[1]]]                                   
+    elsif @piece_coor[1] - 2 == @move_coor[1]
+      knight_path += [@grid[@piece_coor[0]][@move_coor[1]], @grid[@move_coor[0]][@piece_coor[1] - 1]]       
+    elsif @piece_coor[1] + 2 == @move_coor[1]
+      knight_path += [@grid[@piece_coor[0]][@move_coor[1]], @grid[@move_coor[0]][@piece_coor[1] + 1]]           
+    end
+    return true if knight_path.any? { |path| path.include?(empty) }
   end
 
   def w_rook_moves    
@@ -229,7 +250,7 @@ class Board
   def valid_rook_move?
     rook_path = []
     if @piece_coor[0] > @move_coor[0]          
-      (@piece_coor[0] - 1).downto(@move_coor[0] + 1) { |i| rook_path << @grid[i][@piece_coor[1]] }                       
+      (@piece_coor[0] - 1).downto(@move_coor[0] + 1) { |i| rook_path << @grid[i][@piece_coor[1]] }                             
     elsif @piece_coor[0] < @move_coor[0] && @piece_coor[1] == @move_coor[1]
       (@piece_coor[0] + 1).upto(@move_coor[0] - 1) { |i| rook_path << @grid[i][@piece_coor[1]] }                
     elsif @piece_coor[1] > @move_coor[1] && @piece_coor[0] == @move_coor[0]         
@@ -291,11 +312,13 @@ class Board
   def w_queen_moves
     if @current.include?(w_queen.to_s)
       for i in 1..7
-        if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0] || @piece_coor[0] == @move_coor[0]
-            @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
-            return true
-          end        
+        if valid_bishop_move? && valid_rook_move?
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0] || @piece_coor[0] == @move_coor[0]
+              @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s
+              return true
+            end        
+          end
         end            
       end
     end
@@ -305,10 +328,12 @@ class Board
   def b_queen_moves
     if @current.include?(b_queen.to_s)
       for i in 1..7
-        if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
-          if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0] || @piece_coor[0] == @move_coor[0]
-            @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
-            return true
+        if valid_bishop_move? && valid_rook_move?
+          if @piece_coor[1] == @move_coor[1] || @piece_coor[1] - i == @move_coor[1] || @piece_coor[1] + i == @move_coor[1]
+            if @piece_coor[0] - i == @move_coor[0] || @piece_coor[0] + i == @move_coor[0] || @piece_coor[0] == @move_coor[0]
+              @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s
+              return true
+            end
           end
         end            
       end

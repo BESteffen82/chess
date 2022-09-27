@@ -137,7 +137,7 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
           elsif @piece_coor[0] - 1 == @move_coor[0] && en_passant            
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-            #@grid[@move_coor[0] + 1][@move_coor[1]] = empty.to_s                          
+            @grid[@last_move[0] + 1][@last_move[1]] = empty.to_s                          
           end
         end 
       end      
@@ -160,7 +160,7 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
           elsif @piece_coor[0] - 1 == @move_coor[0] && en_passant           
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-            #@grid[@move_coor[0] - 1][@move_coor[1]] = empty.to_s        
+            @grid[@last_move[0] - 1][@last_move[1]] = empty.to_s       
           end
         end
       end      

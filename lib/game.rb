@@ -12,7 +12,7 @@ class Game
 	def play_game				
 		game_setup
 		loop do
-			print_piece_input						
+			print_piece_input								
 		end												
 	end
 

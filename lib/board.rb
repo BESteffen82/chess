@@ -133,11 +133,11 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s                                             
           end        
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if @piece_coor[0] - 1 == @move_coor[0] && pawn_capture 
+          if pawn_capture 
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-          elsif @piece_coor[0] - 1 == @move_coor[0] && en_passant            
-            @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-            @grid[@last_move[0] + 1][@last_move[1]] = empty.to_s                          
+          elsif en_passant            
+            @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s            
+            #@grid[@move_coor[0] + 1][@move_coor[1]] = empty.to_s                          
           end
         end 
       end      
@@ -156,11 +156,11 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s                                            
           end
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if @piece_coor[0] + 1 == @move_coor[0] && pawn_capture 
+          if pawn_capture 
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-          elsif @piece_coor[0] - 1 == @move_coor[0] && en_passant           
+          elsif en_passant           
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-            @grid[@last_move[0] - 1][@last_move[1]] = empty.to_s       
+            #@grid[@last_move[0]][@last_move[1]] = empty.to_s       
           end
         end
       end      
@@ -189,20 +189,29 @@ class Board
   
   def pawn_capture    
     if @current.include?(w_pawn.to_s)
-      black_pieces.any?{ |piece| @move_square.include?(piece) }
+      if @piece_coor[0] - 1 == @move_coor[0]
+        black_pieces.any?{ |piece| @move_square.include?(piece) }
+      end
     elsif @current.include?(b_pawn.to_s)
-      white_pieces.any?{ |piece| @move_square.include?(piece) }
+      if @piece_coor[0] + 1 == @move_coor[0]
+        white_pieces.any?{ |piece| @move_square.include?(piece) }
+      end
     end
   end
 
-  def en_passant
-    @last_move = @moves_made.last            
-    if @grid[@last_move[0]][@last_move[1]].include?(w_pawn) && @last_move[1] == @move_coor[1]
-      @grid[@piece_coor[0]][@piece_coor[1]].include?(b_pawn)
-      @move_square.include?(empty)
-    elsif @grid[@last_move[0]][@last_move[1]].include?(b_pawn) && @last_move[1] == @move_coor[1]        
-      @grid[@piece_coor[0]][@piece_coor[1]].include?(w_pawn)
-      @move_square.include?(empty)      
+  def en_passant    
+    @last_move = @moves_made.last
+    #binding.pry            
+    if @grid[4][@last_move[1]].include?(w_pawn) && @last_move[1] == @move_coor[1]
+      if @piece_coor[0] + 1 == @move_coor[0]
+        @grid[4][@piece_coor[1]].include?(b_pawn)
+        @move_square.include?(empty)
+      end
+    elsif @grid[3][@last_move[1]].include?(b_pawn) && @last_move[1] == @move_coor[1]
+      if @piece_coor[0] - 1 == @move_coor[0]        
+        @grid[3][@piece_coor[1]].include?(w_pawn)
+        @move_square.include?(empty)
+      end      
     end               
   end
 

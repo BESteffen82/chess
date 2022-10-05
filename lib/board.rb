@@ -129,15 +129,18 @@ class Board
             if @piece_coor[0] - 2 == @move_coor[0] || @piece_coor[0] - 1 == @move_coor[0]
               @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s              
             end   
-          elsif @piece_coor[0] - 1 == @move_coor[0]  
-            @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s                                             
+          elsif @piece_coor[0] - 1 == @move_coor[0]
+            if @move_coor[0] == 0
+              pawn_promotion  
+            else @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
+            end                                             
           end        
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if pawn_capture || en_passant
+          if pawn_capture 
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-            if en_passant
-              @grid[3][@last_move[1]] = empty.to_s
-            end                                                                                    
+          elsif en_passant
+            @grid[2][@move_coor[1]] = w_pawn.to_s
+            @grid[3][@last_move[1]] = empty.to_s                                                                                                
           end
         end 
       end      
@@ -152,15 +155,18 @@ class Board
             if @piece_coor[0] + 2 == @move_coor[0] || @piece_coor[0] + 1 == @move_coor[0]
               @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s              
             end   
-          elsif @piece_coor[0] + 1 == @move_coor[0]  
-            @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s                                            
+          elsif @piece_coor[0] + 1 == @move_coor[0]
+            if @move_coor[0] == 7
+              pawn_promotion  
+            else @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
+            end                                            
           end
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if pawn_capture || en_passant
+          if pawn_capture 
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-            if en_passant
-              @grid[4][@last_move[1]] = empty.to_s
-            end                                                          
+          elsif en_passant
+            @grid[5][@move_coor[1]] = b_pawn.to_s
+            @grid[4][@last_move[1]] = empty.to_s                                                                      
           end
         end
       end      
@@ -170,14 +176,10 @@ class Board
   def valid_pawn_move?
     pawn_path = []    
     if @piece_coor[1] == @move_coor[1]
-      if @piece_coor[0] - 2 == @move_coor[0]
-        pawn_path += [@grid[@piece_coor[0] - 1][@move_coor[1]], @move_square]
-      elsif @piece_coor[0] + 2 == @move_coor[0]
-        pawn_path += [@grid[@piece_coor[0] + 1][@move_coor[1]], @move_square]
-      elsif @piece_coor[0] - 1 == @move_coor[0]
-        pawn_path << @move_square
-      elsif @piece_coor[0] + 1 == @move_coor[0]
-        pawn_path << @move_square    
+      if @piece_coor[0] - 2 == @move_coor[0] || @piece_coor[0] + 2 == @move_coor[0] 
+        pawn_path += [@grid[@piece_coor[0] - 1][@move_coor[1]], @move_square]      
+      elsif @piece_coor[0] - 1 == @move_coor[0] || @piece_coor[0] + 1 == @move_coor[0] 
+        pawn_path << @move_square      
       end
       pawn_path.any? { |path| path.include?(empty) }
     elsif pawn_capture
@@ -213,6 +215,11 @@ class Board
       end      
     end
     return true if @last_move[1] == @move_coor[1]               
+  end
+
+  def pawn_promotion
+    puts "Pawn Promotion! Select a number to upgrade your pawn to a new piece."
+    puts "[1] Queen\n[2] Knight\n[3] Rook\n[4] Bishop"    
   end
 
   def w_knight_moves

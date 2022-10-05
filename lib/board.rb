@@ -106,12 +106,12 @@ class Board
     end     
     if valid_piece_move?           
       @grid[@piece_coor[0]][@piece_coor[1]] = empty.to_s
-      @moves_made << @move_coor                 
+      @moves_made << @move_coor      
     end    
   end
 
   def valid_piece_move?    
-    return true if w_pawn_moves || b_pawn_moves
+    return true if w_pawn_moves || b_pawn_moves     
     return true if w_knight_moves || b_knight_moves
     return true if w_rook_moves || b_rook_moves
     return true if w_bishop_moves || b_bishop_moves
@@ -133,11 +133,11 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s                                             
           end        
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if pawn_capture 
+          if pawn_capture || en_passant
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-          elsif en_passant            
-            @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s            
-            #@grid[@move_coor[0] + 1][@move_coor[1]] = empty.to_s                          
+            if en_passant
+              @grid[3][@last_move[1]] = empty.to_s
+            end                                                                                    
           end
         end 
       end      
@@ -156,11 +156,11 @@ class Board
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s                                            
           end
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
-          if pawn_capture 
+          if pawn_capture || en_passant
             @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-          elsif en_passant           
-            @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-            #@grid[@last_move[0]][@last_move[1]] = empty.to_s       
+            if en_passant
+              @grid[4][@last_move[1]] = empty.to_s
+            end                                                          
           end
         end
       end      
@@ -182,7 +182,7 @@ class Board
       pawn_path.any? { |path| path.include?(empty) }
     elsif pawn_capture
       return true
-    elsif en_passant
+    elsif en_passant      
       return true
     end       
   end
@@ -200,8 +200,7 @@ class Board
   end
 
   def en_passant    
-    @last_move = @moves_made.last
-    #binding.pry            
+    @last_move = @moves_made.last                
     if @grid[4][@last_move[1]].include?(w_pawn) && @last_move[1] == @move_coor[1]
       if @piece_coor[0] + 1 == @move_coor[0]
         @grid[4][@piece_coor[1]].include?(b_pawn)
@@ -210,9 +209,10 @@ class Board
     elsif @grid[3][@last_move[1]].include?(b_pawn) && @last_move[1] == @move_coor[1]
       if @piece_coor[0] - 1 == @move_coor[0]        
         @grid[3][@piece_coor[1]].include?(w_pawn)
-        @move_square.include?(empty)
+        @move_square.include?(empty)                        
       end      
-    end               
+    end
+    return true if @last_move[1] == @move_coor[1]               
   end
 
   def w_knight_moves

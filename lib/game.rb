@@ -55,7 +55,7 @@ class Game
 		"selected piece to move to (e.g., a1) or enter 'draw', 'save', or 'quit':\n"
 		@move_input = gets.chomp.downcase					
 		if @board.valid_move?(@move_input) && @board.correct_move_square?(@current_player)			
-			@board.move_piece(@current_player)
+			@board.move_piece(@current_player)			
 			@board.valid_piece_move? ? switch_players : invalid_move
 		else
 			invalid_move											

@@ -13,13 +13,14 @@ class Board
     @grid = Array.new(8) { Array.new(8, empty.to_s) }
     @grid[0] = [b_rook.to_s, b_knight.to_s, b_bishop.to_s, b_queen.to_s, b_king.to_s,
                 b_bishop.to_s, b_knight.to_s, b_rook.to_s]
-    @grid[1] = Array.new(8, b_pawn.to_s)
+    @grid[1] = Array.new(8, b_pawn.to_s)    
     @grid[6] = Array.new(8, w_pawn.to_s)
     @grid[7] = [w_rook.to_s, w_knight.to_s, w_bishop.to_s, w_queen.to_s, w_king.to_s,
-                w_bishop.to_s, w_knight.to_s, w_rook.to_s]
+                w_bishop.to_s, w_knight.to_s, w_rook.to_s]    
     @file = %w[a b c d e f g h]
     @rank = 8.downto(1).to_a
-    @moves_made = []                          
+    @moves_made = []
+    @pawn_promotion = false                          
   end
 
   def print_board
@@ -106,12 +107,19 @@ class Board
     end     
     if valid_piece_move?           
       @grid[@piece_coor[0]][@piece_coor[1]] = empty.to_s
-      @moves_made << @move_coor      
+      @moves_made << @move_coor
+      if @pawn_promotion == true 
+        if @piece_coor[0] == 1 && @current.include?(w_pawn.to_s)
+          pawn_promotion
+        elsif @piece_coor[0] == 6 && @current.include?(b_pawn.to_s)
+          pawn_promotion
+        end
+      end              
     end    
   end
 
   def valid_piece_move?    
-    return true if w_pawn_moves || b_pawn_moves     
+    return true if w_pawn_moves || b_pawn_moves      
     return true if w_knight_moves || b_knight_moves
     return true if w_rook_moves || b_rook_moves
     return true if w_bishop_moves || b_bishop_moves
@@ -131,10 +139,10 @@ class Board
             end   
           elsif @piece_coor[0] - 1 == @move_coor[0]
             if @move_coor[0] == 0
-              pawn_promotion  
+              @pawn_promotion = true                             
             else @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
-            end                                             
-          end        
+            end            
+          end       
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
           if pawn_capture 
             @grid[@move_coor[0]][@move_coor[1]] = w_pawn.to_s
@@ -157,9 +165,9 @@ class Board
             end   
           elsif @piece_coor[0] + 1 == @move_coor[0]
             if @move_coor[0] == 7
-              pawn_promotion  
+              @pawn_promotion = true                             
             else @grid[@move_coor[0]][@move_coor[1]] = b_pawn.to_s
-            end                                            
+            end                                                                             
           end
         elsif @piece_coor[1] - 1 == @move_coor[1] || @piece_coor[1] + 1 == @move_coor[1]
           if pawn_capture 
@@ -185,7 +193,7 @@ class Board
     elsif pawn_capture
       return true
     elsif en_passant      
-      return true
+      return true    
     end       
   end
   
@@ -217,9 +225,27 @@ class Board
     return true if @last_move[1] == @move_coor[1]               
   end
 
-  def pawn_promotion
-    puts "Pawn Promotion! Select a number to upgrade your pawn to a new piece."
-    puts "[1] Queen\n[2] Knight\n[3] Rook\n[4] Bishop"    
+  def pawn_promotion        
+    puts "\nPawn Promotion! Select a number to upgrade your pawn to a new piece.".green
+    puts "[1] Queen\n[2] Knight\n[3] Rook\n[4] Bishop".green
+    loop do
+      @promo_choice = gets.chomp.to_i
+      case @promo_choice
+      when 1        
+        return @grid[@move_coor[0]][@move_coor[1]] = w_queen.to_s if @current.include?(w_pawn.to_s)
+        return @grid[@move_coor[0]][@move_coor[1]] = b_queen.to_s                
+      when 2        
+        return @grid[@move_coor[0]][@move_coor[1]] = w_knight.to_s if @current.include?(w_pawn.to_s)
+        return @grid[@move_coor[0]][@move_coor[1]] = b_knight.to_s               
+      when 3        
+        return @grid[@move_coor[0]][@move_coor[1]] = w_rook.to_s if @current.include?(w_pawn.to_s)
+        return @grid[@move_coor[0]][@move_coor[1]] = b_rook.to_s               
+      when 4        
+        return @grid[@move_coor[0]][@move_coor[1]] = w_bishop.to_s if @current.include?(w_pawn.to_s)
+        return @grid[@move_coor[0]][@move_coor[1]] = b_bishop.to_s               
+      else return puts "\nInvalid choice. Enter a number 1 to 4.".red
+      end
+    end              
   end
 
   def w_knight_moves
